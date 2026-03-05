@@ -1,6 +1,6 @@
 # Automated Savings Service
 
-![App screenshot](public/app-screenshot.png)
+![App screenshot](public/app-screenshot-gyazo.jpg)
 
 Prototype for an automated savings product that connects bank accounts, analyzes cash flow, and schedules safe transfers.
 
