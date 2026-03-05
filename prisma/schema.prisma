@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  plaidItems  PlaidItem[]
+  transfers   Transfer[]
+  subscription StripeSubscription?
+  plaidTransactions PlaidTransaction[]
+  webhookEvents PlaidWebhookEvent[]
+}
+
+model PlaidItem {
+  id              String   @id @default(cuid())
+  userId          String
+  itemId          String
+  accessToken     String
+  institutionName String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id])
+  transactions    PlaidTransaction[]
+}
+
+model Transfer {
+  id           String   @id @default(cuid())
+  userId       String
+  amountCents  Int
+  scheduledFor DateTime
+  status       String
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model StripeSubscription {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  customerId       String
+  subscriptionId   String
+  status           String
+  currentPeriodEnd DateTime
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  user             User     @relation(fields: [userId], references: [id])
+}
+
+model PlaidTransaction {
+  id              String   @id @default(cuid())
+  userId          String
+  plaidItemId     String
+  transactionId   String   @unique
+  name            String
+  amount          Float
+  date            DateTime
+  category        String?
+  pending         Boolean
+  createdAt       DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id])
+  plaidItem       PlaidItem @relation(fields: [plaidItemId], references: [id])
+}
+
+model PlaidWebhookEvent {
+  id          String   @id @default(cuid())
+  userId      String
+  itemId      String
+  webhookType String
+  webhookCode String
+  payload     Json
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+}
