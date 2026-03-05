@@ -1,5 +1,7 @@
 # Automated Savings Service
 
+![App screenshot](public/app-screenshot.png)
+
 Prototype for an automated savings product that connects bank accounts, analyzes cash flow, and schedules safe transfers.
 
 ## Stack
